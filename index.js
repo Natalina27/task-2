@@ -17,75 +17,59 @@
 */
 
 // РЕШЕНИЕ
-
-//form
 const form = document.getElementById('form');
-const div1 = document.createElement('div');
-const div2 = document.createElement('div');
-const div3 = document.createElement('div');
-const mailLabel = document.createElement('label');
-const mailInput = document.createElement('input');
-const passwordLabel = document.createElement('label');
-const passwordInput = document.createElement('input');
-const checkboxLabel = document.createElement('label');
-const checkboxInput = document.createElement('input');
-const button = document.createElement('button');
+const createElement = (el) => document.createElement(el);
+const button = createElement('button');
+const divMail = createElement('div');
+const divPass = createElement('div');
+const divCheckbox = createElement('div');
 
+const createLabel = ({div, labelValue, labelText}) => {
+  const label = createElement('label');
+  label.setAttribute('for', labelValue);
+  label.innerText = labelText;
+  div.appendChild(label);
+}
+const createInput = ({div, cls, labelValue, idValue,  placeholder}) => {
+  const input = createElement('input');
+
+  input.setAttribute('type', labelValue);
+  input.className = cls;
+  input.setAttribute('id', idValue);
+  input.setAttribute('placeholder', placeholder);
+
+  div.appendChild(input);
+
+  return input;
+}
 
 //mail
-form.appendChild(div1);
-div1.className = 'form-group';
-
-mailLabel.setAttribute('for', 'email');
-mailLabel.innerText = 'Электропочта';
-
-mailInput.setAttribute('type', 'email');
-mailInput.className = "form-control";
-mailInput.setAttribute('id', 'email');
-mailInput.setAttribute('placeholder', 'Введите свою электропочту');
-mailInput.setAttribute('autocomplete', 'username');
-
-div1.appendChild(mailLabel);
-div1.appendChild(mailInput);
+divMail.className = 'form-group';
+createLabel({div: divMail, labelValue: 'email', labelText:'Электропочта'});
+const mailInput = createInput({div: divMail, cls: 'form-control', labelValue: 'email',idValue: 'email', placeholder: 'Введите свою электропочту'});
 
 //password
-form.appendChild(div2);
-div2.className = 'form-group';
-
-passwordLabel.setAttribute('for', 'password');
-passwordLabel.innerText = 'Пароль';
-
-passwordInput.setAttribute('type', 'password');
-passwordInput.className = "form-control";
-passwordInput.setAttribute('id', 'password');
-passwordInput.setAttribute('placeholder', 'Введите пароль');
-passwordInput.setAttribute('autocomplete', 'current-password');
-
-div2.appendChild(passwordLabel);
-div2.appendChild(passwordInput);
+divPass.className = 'form-group';
+createLabel({div: divPass, labelValue: 'password', labelText: 'Пароль'});
+const passInput = createInput({div: divPass, cls: 'form-control',labelValue:  'password', idValue: 'password',placeholder: 'Введите пароль'});
 
 //checkbox
-form.appendChild(div3);
-div3.className = 'form-group form-check';
-
-checkboxInput.setAttribute('type', 'checkbox');
-checkboxInput.className = "form-check-input";
-checkboxInput.setAttribute('id', 'exampleCheck1');
-
-checkboxLabel.setAttribute('for', 'exampleCheck1');
-checkboxLabel.innerText = 'Запомнить меня';
-
-div3.appendChild(checkboxInput);
-div3.appendChild(checkboxLabel);
+divCheckbox.className = 'form-group form-check';
+const checkboxInput = createInput({div: divCheckbox, cls: 'form-check-input', labelValue: 'checkbox', idValue:'exampleCheck1'});
+createLabel({div: divCheckbox, labelValue: 'checkbox', labelText: 'Запомнить меня'});
 
 //button
-form.appendChild(button);
 button.setAttribute('type', 'submit');
 button.className = 'btn btn-primary';
 button.innerText = 'Вход';
 
+form.appendChild(divMail);
+form.appendChild(divPass);
+form.appendChild(divCheckbox);
+form.appendChild(button);
+
 //2
-const generateError = function (text) {
+const generateError = (text) => {
   const error = document.createElement('div');
   error.className = 'error';
   error.style.color = 'red';
@@ -93,15 +77,14 @@ const generateError = function (text) {
   return error;
 }
 
-const removeValidation = function () {
+const removeValidation = () => {
   const errors = form.querySelectorAll('.error')
   errors.forEach(item => item.remove());
 }
 
 const fields = form.querySelectorAll('.form-control');
 
-// проверка полей на пустоту
-const checkFieldsNotEmpty = function () {
+const checkFieldsNotEmpty = () => {
   fields.forEach(item => {
     if(!item.value) {
       const error = generateError(' Cannot be blank');
@@ -109,6 +92,7 @@ const checkFieldsNotEmpty = function () {
     }
   })
 }
+
 form.addEventListener(
     'submit',
     function func(e){
@@ -117,7 +101,7 @@ form.addEventListener(
       checkFieldsNotEmpty();
       console.log({
         'email': mailInput.value,
-        'password': passwordInput.value,
+        'password': passInput.value,
         'remember': checkboxInput.checked
       });
     });
